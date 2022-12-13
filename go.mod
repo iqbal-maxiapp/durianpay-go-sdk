@@ -1,4 +1,4 @@
-module github.com/ayatmaulana/durianpay-go-sdk
+module github.com/iqbal-maxiapp/durianpay-go-sdk
 
 go 1.18
 

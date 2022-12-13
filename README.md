@@ -17,7 +17,7 @@ All of API Documentation is on the Official Website of Durian Pay [https://duria
 ## 🚀 Installation
 
 ```bash
-$ go get github.com/ayatmaulana/durianpay-go-sdk
+$ go get github.com/iqbal-maxiapp/durianpay-go-sdk
 ```
 
 ## Usage
@@ -26,8 +26,8 @@ $ go get github.com/ayatmaulana/durianpay-go-sdk
 package main
 
 import (
-    "github.com/ayatmaulana/durianpay-go-sdk"
-    "github.com/ayatmaulana/durianpay-go-sdk/common"
+    "github.com/iqbal-maxiapp/durianpay-go-sdk"
+    "github.com/iqbal-maxiapp/durianpay-go-sdk/common"
 )
 
 ... 
@@ -55,9 +55,9 @@ Here's a brief high-level overview of the Library uses:
 ```go
 import (
     "time"
-    "github.com/ayatmaulana/durianpay-go-sdk"
-    "github.com/ayatmaulana/durianpay-go-sdk/common"
-    "github.com/ayatmaulana/durianpay-go-sdk/modules/order"
+    "github.com/iqbal-maxiapp/durianpay-go-sdk"
+    "github.com/iqbal-maxiapp/durianpay-go-sdk/common"
+    "github.com/iqbal-maxiapp/durianpay-go-sdk/modules/order"
 )
 
 ...
