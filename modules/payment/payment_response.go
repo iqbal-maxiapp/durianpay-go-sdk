@@ -45,18 +45,20 @@ type ChargePaymentVAResponse struct {
 }
 
 type ChargePaymentEWalletResponse struct {
-	Type     string `json:"type"`
-	Response struct {
-		PaymentID      string    `json:"payment_id"`
-		OrderID        string    `json:"order_id"`
-		Mobile         string    `json:"mobile"`
-		Status         string    `json:"status"`
-		ExpirationTime time.Time `json:"expiration_time"`
-		CheckoutURL    string    `json:"checkout_url"`
-		PaidAmount     string    `json:"paid_amount"`
-		Metadata       struct {
-		} `json:"metadata"`
-	} `json:"response"`
+	Data struct {
+		Type     string `json:"type"`
+		Response struct {
+			PaymentID      string    `json:"payment_id"`
+			OrderID        string    `json:"order_id"`
+			Mobile         string    `json:"mobile"`
+			Status         string    `json:"status"`
+			ExpirationTime time.Time `json:"expiration_time"`
+			CheckoutURL    string    `json:"checkout_url"`
+			PaidAmount     string    `json:"paid_amount"`
+			Metadata       struct {
+			} `json:"metadata"`
+		} `json:"response"`
+	} `json:"data"`
 }
 
 type ChargePaymentRetailStoreResponse struct {
