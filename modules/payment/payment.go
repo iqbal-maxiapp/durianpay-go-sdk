@@ -147,7 +147,7 @@ func (p *Payment) VerifyPayment(ctx context.Context, paymentId string) (res *Ver
 
 func (p *Payment) CancelPayment(ctx context.Context, paymentId string) (res *CancelPaymentResponse, err error) {
 	res = &CancelPaymentResponse{}
-	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/"+paymentId+"/cancel", nil, res)
+	err = p.Agent.Call(ctx, http.MethodPut, ROUTE_GROUP+"/"+paymentId+"/cancel", nil, res)
 	return
 }
 
