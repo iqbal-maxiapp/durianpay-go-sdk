@@ -23,12 +23,12 @@ type Payment struct {
 func (p *Payment) FetchPayment(ctx context.Context) (res *FetchPaymentResponse, err error) {
 	res = &FetchPaymentResponse{}
 	err = p.Agent.Call(ctx, http.MethodGet, ROUTE_GROUP, nil, res)
-	return
+	return res, err
 }
 
 func (p *Payment) FetchPaymentById(ctx context.Context, paymentId string) (res *FetchPaymentByIdResponse, err error) {
 	err = p.Agent.Call(ctx, http.MethodGet, ROUTE_GROUP+paymentId, nil, res)
-	return
+	return res, err
 }
 
 // Charge with any payment method
@@ -48,7 +48,7 @@ func (p *Payment) ChargePaymentVA(ctx context.Context, req *ChargePaymentVAReque
 	}
 
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) ChargePaymentEWallet(ctx context.Context, req *ChargePaymentEWalletRequestPayload) (res *ChargePaymentEWalletResponse, err error) {
@@ -62,7 +62,7 @@ func (p *Payment) ChargePaymentEWallet(ctx context.Context, req *ChargePaymentEW
 	}
 
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) ChargePaymentRetailStore(ctx context.Context, req *ChargePaymentRetailStorePayload) (res *ChargePaymentRetailStorePayload, err error) {
@@ -76,7 +76,7 @@ func (p *Payment) ChargePaymentRetailStore(ctx context.Context, req *ChargePayme
 	}
 
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) ChargePaymentOnlineCard(ctx context.Context, req *ChargePaymentCardRequestPayload) (res *ChargePaymentCardResponse, err error) {
@@ -90,7 +90,7 @@ func (p *Payment) ChargePaymentOnlineCard(ctx context.Context, req *ChargePaymen
 	}
 
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) ChargePaymentOnlineBanking(ctx context.Context, req *ChargePaymentOnlineBankingRequestPayload) (res *ChargePaymentOnlineBankingRequestPayload, err error) {
@@ -104,7 +104,7 @@ func (p *Payment) ChargePaymentOnlineBanking(ctx context.Context, req *ChargePay
 	}
 
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) ChargePaymentQRIS(ctx context.Context, req *ChargePaymentQRISRequestPayload) (res *ChargePaymentQRISResponse, err error) {
@@ -117,7 +117,7 @@ func (p *Payment) ChargePaymentQRIS(ctx context.Context, req *ChargePaymentQRISR
 		Request: req,
 	}
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) ChargePaymentBNPL(ctx context.Context, req *ChargePaymentBNPLRequestPayload) (res *ChargePaymentBNPLResponse, err error) {
@@ -130,29 +130,29 @@ func (p *Payment) ChargePaymentBNPL(ctx context.Context, req *ChargePaymentBNPLR
 		Request: req,
 	}
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/charge", payload, res)
-	return
+	return res, err
 }
 
 func (p *Payment) CheckPaymentStatus(ctx context.Context, paymentId string) (res *CheckPaymentStatusResponse, err error) {
 	res = &CheckPaymentStatusResponse{}
 	err = p.Agent.Call(ctx, http.MethodGet, ROUTE_GROUP+"/"+paymentId+"/status", nil, res)
-	return
+	return res, err
 }
 
 func (p *Payment) VerifyPayment(ctx context.Context, paymentId string) (res *VerifyPaymentResponse, err error) {
 	res = &VerifyPaymentResponse{}
 	err = p.Agent.Call(ctx, http.MethodPost, ROUTE_GROUP+"/"+paymentId+"/verify", nil, res)
-	return
+	return res, err
 }
 
 func (p *Payment) CancelPayment(ctx context.Context, paymentId string) (res *CancelPaymentResponse, err error) {
 	res = &CancelPaymentResponse{}
 	err = p.Agent.Call(ctx, http.MethodPut, ROUTE_GROUP+"/"+paymentId+"/cancel", nil, res)
-	return
+	return res, err
 }
 
 func (p *Payment) MDRFeeCalculation(ctx context.Context, amount string, paymentMethod string) (res *MDRFeeCalculationResponse, err error) {
 	res = &MDRFeeCalculationResponse{}
 	err = p.Agent.Call(ctx, http.MethodGet, "/merchants/mdr_fees", nil, res)
-	return
+	return res, err
 }

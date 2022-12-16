@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"io"
+	"errors"
 
 	"net/http"
 	"net/http/httputil"
@@ -13,86 +13,85 @@ import (
 )
 
 type Agent struct {
-  ClientConfig *ClientConfig
-  HttpClient *http.Client
-  Logger *logrus.Logger
+	ClientConfig *ClientConfig
+	HttpClient   *http.Client
+	Logger       *logrus.Logger
 }
 
 func (agent *Agent) Call(
-  ctx context.Context, 
-  method,
-  url string, 
-  body any,
-  response any,
-) ( err error) {
-  fullUrl := BASE_URL + url
-  
-  var bodyBuffer bytes.Buffer
-  err = json.NewEncoder(&bodyBuffer).Encode(body)
+	ctx context.Context,
+	method,
+	url string,
+	body any,
+	response any,
+) (err error) {
+	fullUrl := BASE_URL + url
 
-  req, err := http.NewRequest(method, fullUrl, &bodyBuffer)
+	var bodyBuffer bytes.Buffer
+	err = json.NewEncoder(&bodyBuffer).Encode(body)
 
-  if err != nil {
-    return
-  }
+	req, err := http.NewRequest(method, fullUrl, &bodyBuffer)
 
-  req = req.WithContext(ctx)
-  req.SetBasicAuth(agent.ClientConfig.ApiKey, "")
-  req.Header.Add("Content-Type", "application/json")
-  req.Header.Add("Accept", "application/json")
+	if err != nil {
+		return
+	}
 
-  res, err := agent.HttpClient.Do(req)
+	req = req.WithContext(ctx)
+	req.SetBasicAuth(agent.ClientConfig.ApiKey, "")
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Accept", "application/json")
 
-  if err != nil {
-    return
-  }
+	res, err := agent.HttpClient.Do(req)
 
-  defer res.Body.Close()
+	if err != nil {
+		return
+	}
 
-  if agent.ClientConfig.EnableLogging {
-    agent.debug(req, res)
-  }
+	defer res.Body.Close()
 
-  // decode body
-  if res.StatusCode >= 200 && res.StatusCode <= 209 {
-    err = json.NewDecoder(res.Body).Decode(&response)
-  } else if res.StatusCode >= 400 && res.StatusCode <= 409 {
-    b, err  := io.ReadAll(res.Body)
-    if err != nil {
-      return err
+	if agent.ClientConfig.EnableLogging {
+		agent.debug(req, res)
+	}
 
-    }
+	// decode body
+	if res.StatusCode >= 200 && res.StatusCode <= 209 {
+		err = json.NewDecoder(res.Body).Decode(&response)
+	} else if res.StatusCode >= 400 && res.StatusCode <= 409 {
+		errorResp := &ErrorResponse{}
+		err = json.NewDecoder(res.Body).Decode(&errorResp)
+		if err != nil {
+			return err
+		}
 
-    agent.Logger.Errorln(string(b))
-    agent.Logger.Errorln(err)
+		return errors.New(errorResp.Error)
+	} else if res.StatusCode >= 500 && res.StatusCode <= 509 {
+		errorResp := &ErrorResponse{}
+		err = json.NewDecoder(res.Body).Decode(&errorResp)
+		if err != nil {
+			return err
+		}
 
-  } else if res.StatusCode >= 500 && res.StatusCode <= 509 {
-    b, err  := io.ReadAll(res.Body)
-    if err != nil {
-      return err
-    }
+		return errors.New(errorResp.Error)
+	}
 
-    agent.Logger.Errorln(string(b))
-    agent.Logger.Errorln(err)
-  }
-
-  return
+	return
 }
 
-func (agent *Agent) debug (req *http.Request, res *http.Response) {
-  debugReq, err := httputil.DumpRequest(req, true)
-  agent.Logger.Infoln(string(debugReq))
+func (agent *Agent) debug(req *http.Request, res *http.Response) {
+	debugReq, err := httputil.DumpRequest(req, true)
+	agent.Logger.Infoln(string(debugReq))
 
-  debug, err := httputil.DumpResponse(res, true)
-  if err != nil {}
+	debug, err := httputil.DumpResponse(res, true)
+	if err != nil {
+	}
 
-  agent.Logger.Infoln(string(debug))
+	agent.Logger.Infoln(string(debug))
 }
 
 func NewAgent(clientConfig *ClientConfig) *Agent {
-  return &Agent{
-    ClientConfig: clientConfig,
-    HttpClient: &http.Client{},
-    Logger: logrus.New(),
-  }
+	return &Agent{
+		ClientConfig: clientConfig,
+		HttpClient:   &http.Client{},
+		Logger:       logrus.New(),
+	}
 }
