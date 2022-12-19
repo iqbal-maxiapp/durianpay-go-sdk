@@ -31,15 +31,13 @@ type ChargePaymentVAResponse struct {
 	Data struct {
 		Type     string `json:"type"`
 		Response struct {
-			PaymentID          string    `json:"payment_id"`
-			OrderID            string    `json:"order_id"`
-			AccountNumber      string    `json:"account_number"`
-			ExpirationTime     time.Time `json:"expiration_time"`
-			PaidAmount         string    `json:"paid_amount"`
-			PaymentInstruction struct {
-			} `json:"payment_instruction"`
-			Metadata struct {
-			} `json:"metadata"`
+			PaymentID          string      `json:"payment_id"`
+			OrderID            string      `json:"order_id"`
+			AccountNumber      string      `json:"account_number"`
+			ExpirationTime     time.Time   `json:"expiration_time"`
+			PaidAmount         string      `json:"paid_amount"`
+			PaymentInstruction interface{} `json:"payment_instruction"`
+			Metadata           interface{} `json:"metadata"`
 		} `json:"response"`
 	} `json:"data"`
 }
